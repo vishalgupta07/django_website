@@ -1,0 +1,72 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block stylesheet %}<link rel="stylesheet" href="{% static 'blog/gallery.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">{% endblock %}
+{% block script %}<script src="{% static 'blog/gallery.js' %}" charset="utf-8"></script>{% endblock %}
+{% block content %}
+<!-- for each post in the 'posts':Post.objects.all() dictionary we loop over-->
+<!-- image gallery-->
+<main role="main" class="container">
+	<div class="row">
+
+	<div class="col-md-9">
+		<div class="container1">
+			<!-- <div class="col-md-9"> -->
+
+			<div id="gallery" class="gallery">
+				<!-- controllers -->
+				<a class="gallery__controller gallery__controller--prev"></a>
+				<a class="gallery__controller gallery__controller--next"></a>
+
+				<div class="gallery__images">
+					<!-- images -->
+					<img id = 'img1' src="{% static 'images/img1.jpg' %}" class="active">
+					<img src="{% static 'images/img2.jpg' %}">
+					<img src="{% static 'images/img3.jpg' %}">
+					<img src="{% static 'images/img4.jpg' %}">
+					<img id = 'img5' src="{% static 'images/img5.jpg' %}">
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- </div> -->
+	<div class="col-md-3">
+		<div class="content-section">
+			<!-- <h3>Our Sidebar</h3> -->
+			<!-- <p class='text-muted'>You can put any information here you'd like. -->
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-light">Missions</li>
+				<li class="list-group-item list-group-item-light">Message from GenSec</li>
+				<li class="list-group-item list-group-item-light">About Us</li>
+				<li class="list-group-item list-group-item-light">our Journey</li>
+				<li class="list-group-item list-group-item-light">Calendars</li>
+				<!--li class="list-group-item list-group-item-light">etc</li-->
+			</ul>
+			<!-- </p> -->
+		</div>
+	</div>
+</div>
+</main>
+{% if is_paginated %}
+
+{% if page_obj.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+{% if page_obj.number == num %}
+<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+<a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% endif %}
+{% endfor %}
+
+{% if page_obj.has_next %}
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+{% endif %}
+
+{% endif %}
+{% endblock content %}<!--ending the content 'block' here-->
