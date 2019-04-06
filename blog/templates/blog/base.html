@@ -1,4 +1,5 @@
 {% load static %}
+{% load blog_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +36,12 @@
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
             <a class="nav-item nav-link" href="{% url 'post-home'%}">Posts</a>
+            <a class="nav-item nav-link" href="{% url 'event-home'%}">Events</a>
+
 	          {% if user.is_authenticated %}
+	          	{% if user|has_group:"Members Only" %}
+	          		<a class="nav-item nav-link" href="{% url 'event-create'%}">New Event</a>
+	          	{% endif %}
 	            <a class="nav-item nav-link" href="{% url 'post-create'%}">Post Something!</a>
 	            <a class="nav-item nav-link" href="{% url 'profile'%}">Profile</a>
 	          	<a class="nav-item nav-link" href="{% url 'logout'%}">Logout</a>
@@ -48,7 +54,7 @@
 	    </div>
 	  </nav>
 	</header>
-	<!-- <main role="main" class="container">
+	<main role="main" class="container">
 	  <div class="row">
 	    <div class="col-md-9">
 	      {% if messages %}
@@ -60,10 +66,8 @@
 	      {% endif %}
 	      {% block content %}{% endblock %}
 	    </div>
-
 	  </div>
-	</main> -->
-
+	</main>
 
 
 
@@ -72,12 +76,12 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-{% block script %}{% endblock %}
+    {% block script %}{% endblock %}
 
 </body>
-<div class="social">
+<!-- <div class="social">
   <a href="https://www.facebook.com/ECEANITW/"><img src="{% static 'blog/facebook_logo.svg' %}" alt="facebook"></a>
   <a href="https://www.instagram.com/nitw.ecea/"><img src="{% static 'blog/instagram_logo.svg' %}" alt="facebook"></a>
 
-</div>
+</div> -->
 </html>

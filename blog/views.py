@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, Event
 
 
 
@@ -32,7 +32,28 @@ class PostListView(ListView):
 	ordering = ['-date_posted']
 	paginate_by = 2
 
+class EventListView(ListView):
+	model = Event
+	template_name = 'blog/event.html'
+	#context_object_name is name passed along as the return type of object_list
+	#to the given 'blog/home.html' file
+	#here(html template) instead of using object_list we use 'posts' as the looping object_list
+	#it does not have any relationship with the dictionary defined above in home function
+	context_object_name = 'events'
+	ordering = ['-date_posted']
+	paginate_by = 2
 
+class EventCreateView(LoginRequiredMixin, CreateView):
+	model = Event
+	fields = ['title', 'content']
+
+	def form_valid(self, form):
+		form.instance.author = self.request.user
+		return super().form_valid(form)
+
+
+class EventDetailView(DetailView):
+	model = Event
 
 
 
@@ -77,7 +98,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 
 
-
 #This is to update a post by a particular logged in user
 #This is called by 'localhost:8000/post/<pk>/update' by a tab on 'update' viewed on 'post_details.html'
 #it directs page to 'blog/post_forms.html'
@@ -95,7 +115,19 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			return True
 		return False
 
+class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Event
+	fields = ['title', 'content']
 
+	def form_valid(self, form):
+		form.instance.author = self.request.user
+		return super().form_valid(form)
+
+	def test_func(self):
+		event = self.get_object()
+		if self.request.user == event.author:
+			return True
+		return False
 
 
 #same as the update view
@@ -108,6 +140,14 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Event
+	success_url = '/'
+	def test_func(self):
+		event = self.get_object()
+		if self.request.user == event.author:
+			return True
+		return False
 
 
 
